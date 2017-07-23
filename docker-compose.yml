@@ -1,0 +1,49 @@
+version: "2"
+services:
+  web:
+    build: ./docker/nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - "${PROJECT_ROOT}:/app:ro"
+    depends_on:
+      - php
+    networks:
+      - server
+
+
+  php:
+    #in case ipv6 is disabled: use 'build xxx'
+    #otherwise: use 'image xxx' 
+    #image: php:7.1-fpm
+    build: ./docker/php
+    volumes:
+      - "${PROJECT_ROOT}:/app"
+    depends_on:
+      - mysql
+    networks:
+      - server
+      - database
+
+
+
+  mysql:
+    image: mysql:latest
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    networks:
+      - database
+
+volumes:
+  data:
+
+networks:
+  server:
+  database:
+
+
