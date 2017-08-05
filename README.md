@@ -29,7 +29,7 @@ docker-compose up
 
 (coming soon)
 
-#References
+# References
 [Slim](https://www.slimframework.com/) Slim, a PHP micro-framework
 [libsodium](https://github.com/jedisct1/libsodium) Libsodium, library for cryptographic needs (randomness, encryption, hashing) 
 [SRP6a](http://srp.stanford.edu/) A Zero-knowledge Authentication scheme (Tom Wu, Stanford)
