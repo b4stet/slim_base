@@ -1,19 +1,21 @@
 <?php
+require_once '../vendor/autoload.php';
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-require '../vendor/autoload.php';
+use SlimBase\Tables\UserTable;
+use SlimBase\Entities\User;
+ 
 
 // config key/values
 $config = [
     'settings' => [
-        'displayErrorDetails' => true,
+        'displayErrorDetails'    => true,
         'addContentLengthHeader' => false,
-        'db' => [
+        'db'   => [
             'dbname' => 'slim_base',
-            'host' => "mysql",
-            'user' => 'slim',
-            'pass' => 'slim'
+            'host'   => "mysql",
+            'user'   => 'slim',
+            'pass'   => 'slim'
         ],
     ]
 ];
@@ -30,30 +32,55 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+$container['view'] = function($c){
+    return new \Slim\Views\PhpRenderer('../templates/');
+};
+
 
 // routes callback
-$app->get('/', function () {
-
-    print "<h1>SlimBase app - MySql status </h1>\n";
-
-    $dbsettings = $this->get('settings')['db'];
-    $tables = $this->db->query("SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_TYPE='BASE TABLE'")->fetchAll(PDO::FETCH_COLUMN);
-    if (empty($tables)) {
-            print  "<p>There are no tables in database \"{$dbsettings['dbname']}\".</p>\n";
-    } else {
-        print  "<p>Database \"{$dbsettings['dbname']}\" has the following tables:</p>\n";
-        print  "<ul>\n";
-        foreach ($tables as $table) {
-            print  "<li>{$table}</li>\n";
-        }
-        print  "</ul>\n";
-    }
+$app->get('/', function (Request $request, Response $response) {
+    $response = $this->view->render($response, 'welcome.html');
+    return $response;
 });
 
-$app->get('/info', function (Request $request, Response $response) {
+$app->get('/phpinfo', function (Request $request, Response $response) {
     $info = phpinfo();
     $response->getBody()->write(var_dump($info));
     return $response;
+});
+
+$app->get('/register', function (Request $request, Response $response) {
+    $response = $this->view->render($response, "register.html");
+    return $response;
+});
+
+$app->post('/register', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
+    $username = $data['username'];
+    $password = $data['password'];
+    $userTable = new UserTable($this->db);
+
+    if (empty($password)){
+        $msg = "* password cannot be empty";
+        $response = $this->view->render($response, "register.html", ['msgPassword'=>$msg]);
+    }elseif (!empty($userTable->getUserByUsername($username)->getUserId())){
+        $msg = "* user already exists";
+        $response = $this->view->render($response, "register.html", ['msgUsername'=>$msg]);
+    }else{
+        $user = new User($username,$password);
+        try{
+            $userTable->save($user);
+            $response->getBody()->write("registered '".$username."' successfully");
+        }catch(Exception $e){
+            $response->getBody()->write($e->getMessage());
+        };
+    }
+    
+    return $response;
+});
+
+$app->get('/login', function (Request $request, Response $response) {
+    $response->getBody()->write("OK");
 });
 
 
