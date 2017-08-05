@@ -4,6 +4,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use SlimBase\Tables\UserTable;
 use SlimBase\Entities\User;
+
+
  
 
 // config key/values
@@ -43,12 +45,6 @@ $app->get('/', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/phpinfo', function (Request $request, Response $response) {
-    $info = phpinfo();
-    $response->getBody()->write(var_dump($info));
-    return $response;
-});
-
 $app->get('/register', function (Request $request, Response $response) {
     $response = $this->view->render($response, "register.html");
     return $response;
@@ -67,15 +63,21 @@ $app->post('/register', function (Request $request, Response $response) {
         $msg = "* user already exists";
         $response = $this->view->render($response, "register.html", ['msgUsername'=>$msg]);
     }else{
-        $user = new User($username,$password);
-        try{
-            $userTable->save($user);
-            $response->getBody()->write("registered '".$username."' successfully");
-        }catch(Exception $e){
-            $response->getBody()->write($e->getMessage());
-        };
+        if (preg_match('/^[a-zA-Z0-9]+$/',$username) === 1){
+            $user = new User($username,$password);
+            try{
+                $userTable->save($user);
+                $response->getBody()->write("registered '".$username."' successfully");
+            }catch(Exception $e){
+                $response->getBody()->write($e->getMessage());
+            };
+        
+        }else{
+            $msg = "* username can only contain alphanumeric characters ([a-zA-Z0-9])";
+            $response = $this->view->render($response, "register.html", ['msgUsername'=>$msg]);
+        }
     }
-    
+
     return $response;
 });
 

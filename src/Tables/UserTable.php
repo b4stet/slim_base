@@ -3,6 +3,8 @@
 namespace SlimBase\Tables;
 
 use SlimBase\Entities\User as User;
+use SlimBase\Utils\Randomness as Randomness;
+use SlimBase\Utils\Hashing as Hashing;
 use Exception;
 
 class UserTable {
@@ -15,11 +17,16 @@ class UserTable {
 
 	
 	public function save(User $user){
+
+		$salt = Randomness::generateBytes(32);
+		$password = Hashing::generateSha512($salt . $user->getPassword());
+
 		try{
-			$stmt = $this->db->prepare('INSERT INTO users (username,password) VALUES (:username,:password)');
+			$stmt = $this->db->prepare('INSERT INTO users (username,password,salt) VALUES (:username,:password,:salt)');
 			$params = [
 				':username' => $user->getUsername(),
-				':password' => $user->getPassword()
+				':password' => $password,
+				':salt'		=> $salt
 			];
 			$res = $stmt->execute($params); 
 		}catch(Exception $e){
