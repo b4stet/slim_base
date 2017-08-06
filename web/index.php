@@ -4,14 +4,15 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use SlimBase\Tables\UserTable;
 use SlimBase\Entities\User;
+use SlimBase\Handlers\DefaultErrorHandler;
 
 
  
 
-// config key/values
+/* config key/values */
 $config = [
     'settings' => [
-        'displayErrorDetails'    => true,
+        'displayErrorDetails'    => true, //for dev only, detailed error diagnostic (stack trace) in default Slim error handler
         'addContentLengthHeader' => false,
         'db'   => [
             'dbname' => 'slim_base',
@@ -22,11 +23,12 @@ $config = [
     ]
 ];
 
-// instantiate App
+/*instantiate App */
 $app = new \Slim\App($config);
 
-// fetch dependencies injection container and register service provider
+/* fetch dependencies injection container and register service provider*/
 $container = $app->getContainer();
+// db connection service
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],$db['user'], $db['pass']);
@@ -34,12 +36,18 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+// template renderer service
 $container['view'] = function($c){
     return new \Slim\Views\PhpRenderer('../templates/');
 };
+// change the default Slim error handlers service
+unset($app->getContainer()['errorHandler']);
+$container['errorHandler'] = function($c){
+    return new DefaultErrorHandler();
+};
 
 
-// routes callback
+/* routes callback */
 $app->get('/', function (Request $request, Response $response) {
     $response = $this->view->render($response, 'welcome.html');
     return $response;
@@ -65,13 +73,9 @@ $app->post('/register', function (Request $request, Response $response) {
     }else{
         if (preg_match('/^[a-zA-Z0-9]+$/',$username) === 1){
             $user = new User($username,$password);
-            try{
-                $userTable->save($user);
-                $response->getBody()->write("registered '".$username."' successfully");
-            }catch(Exception $e){
-                $response->getBody()->write($e->getMessage());
-            };
-        
+            $userTable->save($user);
+            $msg = "Account successfully registered. You can now log in.";
+            $response = $this->view->render($response, "welcome.html", ['msgWelcome'=>$msg]);    
         }else{
             $msg = "* username can only contain alphanumeric characters ([a-zA-Z0-9])";
             $response = $this->view->render($response, "register.html", ['msgUsername'=>$msg]);
