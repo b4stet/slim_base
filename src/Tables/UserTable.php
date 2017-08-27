@@ -17,43 +17,53 @@ class UserTable {
 
 	
 	public function save(User $user){
-
 		$salt = Randomness::generateBytes(32);
-		$password = Hashing::generateSha512($salt . $user->getPassword());
-
-		try{
-			$stmt = $this->db->prepare('INSERT INTO users (username,password,salt) VALUES (:username,:password,:salt)');
-			$params = [
-				':username' => $user->getUsername(),
-				':password' => $password,
-				':salt'		=> $salt
-			];
-			$res = $stmt->execute($params); 
-		}catch(Exception $e){
-			throw new Exception($e->getMessage());
-		}
+		$hash = $this->hashPassword($salt,$user->getPassword());
+		$stmt = $this->db->prepare('INSERT INTO users (username,password,salt) VALUES (:username,:password,:salt)');
+		$params = [
+			':username' => $user->getUsername(),
+			':password' => $hash,
+			':salt'		=> $salt
+		];
+		return $stmt->execute($params); 
 	}
 
-
-	public function getUserById($userId){
-		$stmt = $this->db->prepare('SELECT * FROM users WHERE user_id=:userId LIMIT 1');
-		$res = $stmt->execute([":userId"=>$userId]);
-		if ($res !== true){
-			throw new Exception("[getUserById] failed to find user_id = ".$userId);
+	public function isExistUsername($username){
+		$stmt = $this->db->prepare('SELECT * FROM users WHERE username=:username LIMIT 1');
+		$stmt->execute([":username"=>$username]);
+		$res = $stmt->fetch();
+		
+		$isExist = false;		
+		if ($res === false){
+			$isExist = true;
 		}
-
-		$user = $stmt->fetch();
-		return new User($user['username'],$user['password'],$user['user_id']);
+		return $isExist;	
 	}
 
-	public function getUserByUsername($username){
-		$stmt = $this->db->prepare('SELECT * FROM users WHERE username=:username');
-		$res = $stmt->execute([":username"=>$username]);
-		if ($res !== true){
-			throw new Exception("[getUserByUsername] failed to find username = ".$username);
-		}
+	public function getUserByUsernameAndPassword($username, $password){
+		$stmt = $this->db->prepare('SELECT * FROM users WHERE username=:username LIMIT 1');
+		$stmt->execute([":username"=>$username]);
+		$res = $stmt->fetch();
 
-		$user = $stmt->fetch();
-		return new User($user['username'],$user['password'],$user['user_id']);	
+		$user = null;
+	
+		//test if user exists in db
+		if($res !== false){
+			$storedHash = $res['password'];
+			$userHash = $this->hashPassword($res['salt'],$password);
+
+			//verify user password			
+			if(hash_equals($storedHash,$userHash)){
+				$user = new User();
+				$user->setUserId($res['user_id']);
+				$user->setUsername($res['username']);
+			}	
+		}
+			
+		return $user;	
+	}
+
+	protected function hashPassword($salt,$password){
+		return Hashing::generateSha512($salt.$password);
 	}
 }

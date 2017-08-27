@@ -1,0 +1,22 @@
+<h1> User Login </h1>
+
+<?php if ($msgLoginSuccess):?>
+<div><font color="green"><?=$msgLoginSuccess?></font></div>
+<div><a href='/resources/list'>Go to resources list</a></div>
+
+<?php else:?>
+<div><font color="red"><?=$msgLoginFailed?></font></div>
+<form method="post" action="">
+	<table>
+		<tr>
+			<td>Username</td>
+			<td><input type="text" name="username" value=""></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><input type="password" name="password" value=""></td>
+		</tr>
+	</table>
+	<input id="button-login" type="submit" name="login" value="Submit">
+</form>
+<?php endif;?>

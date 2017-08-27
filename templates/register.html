@@ -1,4 +1,10 @@
 <h1> User Registration </h1>
+
+<?php if ($msgRegistered):?> 
+<div><font color="green"><?=$msgRegistered?></font></div>
+<div><a href='/login'>Go log in</a></div>
+
+<?php else: ?>
 <form method="post" action="">
 	<table>
 		<tr>
@@ -14,4 +20,4 @@
 	</table>
 	<input id="button-register" type="submit" name="register" value="Submit">
 </form>
- 
+<?php endif;?> 

@@ -1,21 +1,22 @@
-# SlimBase api 
+# a PHP Slim basis with Docker to prototype an API
 
-Training project using PHP Slim framework and Docker to implement an API and their clients) with the following capabilities:
+Training project using PHP Slim framework and Docker to implement an API with the following functionalities:
 * zero-knowledge authentication 
 * optional encrypted communication once authenticated
-* anonymous access to resources.
+* anonymous access to resources once authenticated
 
 
 Schedule:
-- [] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
-- [] add custom error handlers and unit tests
-- [] refacto - create proper routing and controllers
-- [] register and login with standard authentication scheme and libsodium library
+- [x] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
+- [x] add custom error handlers (500 and 404) 
+- [] refacto - create proper config loading, service providers registration, routing and controllers
+- [] add unit tests
+- [] register and login: replace PHP functions by libsodium ones 
+- [] register and login: replace standard authentication by SRP 
 - [] refacto - use a middleware for authentication 
-- [] register and login with SRP authentication scheme and libsodium library
 - [] add and serve resources only if user is logged in
 - [] serve resources in an encrypted way using SRP key-exchange
-- [] add anonymity when serving resources, using DRAS/IRAS crypto-system (cc Pascal :metal:)
+- [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
 
 
 # Usage
@@ -27,10 +28,10 @@ docker-compose
 
 
 ## Install
-from root folder:
+from root folder of the project:
 ```
-docker run -it --rm --volume $PWD:/app --user $(id -u):$(id -g) composer install
-docker-compose up
+docker run -it --rm -v $(pwd):/app -u $(id -u $USER):$(id -g $USER) -w /app composer install
+docker-compose build && docker-compose up
 ```
 
 
