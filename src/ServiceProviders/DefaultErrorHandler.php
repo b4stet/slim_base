@@ -1,11 +1,14 @@
 <?php
 
-namespace SlimBase\Handlers;
+namespace SlimBase\ServiceProviders;
 
-Class DefaultErrorHandler(){
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+use Exception;
+
+class DefaultErrorHandler{
 	public function __invoke(Request $request, Response $response, Exception $exception) {
 		//TODO: log error message
-
     	return $response
         	->withStatus(500)
         	->withHeader('Content-Type', 'text/html')

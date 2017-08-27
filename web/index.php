@@ -1,52 +1,25 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../config/app_config.php';
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use SlimBase\Tables\UserTable;
 use SlimBase\Entities\User;
-use SlimBase\Handlers\DefaultErrorHandler;
 
 
-/* config key/values */
-$config = [
-    'settings' => [
-        'displayErrorDetails'    => true, //for dev only, detailed error diagnostic (stack trace) will appear in th eerror handler
-        'addContentLengthHeader' => false,
-        'db'   => [
-            'dbname' => 'slim_base',
-            'host'   => "mysql",
-            'user'   => 'slim',
-            'pass'   => 'slim'
-        ],
-    ]
-];
 
-/*instantiate App */
+// instantiate app and register service providers
 $app = new \Slim\App($config);
-
-/* fetch dependencies injection container and register service provider*/
 $container = $app->getContainer();
-// db connection service
-$container['db'] = function ($c) {
-    $db = $c['settings']['db'];
-    $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],$db['user'], $db['pass']);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    return $pdo;
-};
-// template renderer service
-$container['view'] = function($c){
-    return new \Slim\Views\PhpRenderer('../templates/');
-};
-// change the default Slim error handlers service
-unset($app->getContainer()['errorHandler']);
-$container['errorHandler'] = function($c){
-    return new DefaultErrorHandler();
-};
+foreach ($di_containers as $name => $service){
+    $container[$name] = function ($c) use ($service){
+        return $service;
+    };
+}
 
 
 /* routes callback */
-// default
+// index
 $app->get('/', function (Request $request, Response $response) {
     $response = $this->view->render($response, 'welcome.html');
     return $response;

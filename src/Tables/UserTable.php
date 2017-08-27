@@ -15,7 +15,6 @@ class UserTable {
 		$this->db = $db;
 	}
 
-	
 	public function save(User $user){
 		$salt = Randomness::generateBytes(32);
 		$hash = $this->hashPassword($salt,$user->getPassword());
@@ -34,7 +33,7 @@ class UserTable {
 		$res = $stmt->fetch();
 		
 		$isExist = false;		
-		if ($res === false){
+		if ($res !== false){
 			$isExist = true;
 		}
 		return $isExist;	
@@ -59,7 +58,7 @@ class UserTable {
 				$user->setUsername($res['username']);
 			}	
 		}
-			
+
 		return $user;	
 	}
 
