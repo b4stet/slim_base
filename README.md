@@ -13,6 +13,20 @@ The API, behind the web application, will handle:
 * deliver resources when requested
 
 
+# Schedule:
+- [x] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
+- [x] add custom error handlers (500 and 404) 
+- [x] refacto - create proper config loading, service providers registration, routing and controllers
+- [] register and login: replace PHP functions by libsodium ones 
+- [] register and login: replace standard authentication by SRP 
+- [] implement a middleware for authentication 
+- [] add unit tests
+- [] divide into web app and api
+- [] add and serve resources only if user is logged in
+- [] serve resources in an encrypted way using SRP key-exchange
+- [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
+
+
 # Description
 ## Prerequisites
 ```
@@ -20,13 +34,13 @@ docker-ce
 docker-compose
 ```
 
-
 ## Install and run
 from root folder of the project:
 ```
 docker run -it --rm -v $(pwd):/app -u $(id -u $USER):$(id -g $USER) -w /app composer install
 docker-compose build && docker-compose up
 ```
+
 # Security consideration
 
 List of 'countermeasures' implemented to prevent basic vulnerabilities
@@ -45,15 +59,3 @@ List of 'countermeasures' implemented to prevent basic vulnerabilities
 * [SRP6a](http://srp.stanford.edu/) a Zero-knowledge Authentication scheme (Tom Wu, Stanford)
 * [DRAS/IRAS](http://sancy.univ-bpclermont.fr/~lafourcade/SLIDES/Secrypt-BBL16.pdf) Two Secure Anonymous Proxy-based Data Storages (Pascal Lafourcade, Olivier Blazy and Xavier Bultel)
 
-# Schedule:
-- [x] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
-- [x] add custom error handlers (500 and 404) 
-- [x] refacto - create proper config loading, service providers registration, routing and controllers
-- [] register and login: replace PHP functions by libsodium ones 
-- [] register and login: replace standard authentication by SRP 
-- [] implement a middleware for authentication 
-- [] add unit tests
-- [] divide into web app and api
-- [] add and serve resources only if user is logged in
-- [] serve resources in an encrypted way using SRP key-exchange
-- [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
