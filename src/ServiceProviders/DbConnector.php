@@ -1,6 +1,7 @@
 <?php
 
 namespace SlimBase\ServiceProviders;
+
 use PDO;
 
 class DbConnector{

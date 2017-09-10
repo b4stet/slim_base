@@ -1,7 +1,7 @@
 <h1> User Registration </h1>
 
 <?php if ($msgRegistered):?> 
-<div><font color="green"><?=$msgRegistered?></font></div>
+<div><font color="green"><?=$msgRegisterSuccess?></font></div>
 <div><a href='/login'>Go log in</a></div>
 
 <?php else: ?>
@@ -10,12 +10,12 @@
 		<tr>
 			<td>Username</td>
 			<td><input type="text" name="username" value=""></td>
-			<td><font color="red"><?=$msgUsername?></font></td>
+			<td><font color="red"><?=$msgUsernameError?></font></td>
 		</tr>
 		<tr>
 			<td>Password</td>
 			<td><input type="password" name="password" value=""></td>
-			<td><font color="red"><?=$msgPassword?></font></td>
+			<td><font color="red"><?=$msgPasswordError?></font></td>
 		</tr>
 	</table>
 	<input id="button-register" type="submit" name="register" value="Submit">

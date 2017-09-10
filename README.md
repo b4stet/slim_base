@@ -48,7 +48,7 @@ List of 'countermeasures' implemented to prevent basic vulnerabilities
 # Schedule:
 - [x] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
 - [x] add custom error handlers (500 and 404) 
-- [] refacto - create proper config loading, service providers registration, routing and controllers
+- [x] refacto - create proper config loading, service providers registration, routing and controllers
 - [] register and login: replace PHP functions by libsodium ones 
 - [] register and login: replace standard authentication by SRP 
 - [] implement a middleware for authentication 
