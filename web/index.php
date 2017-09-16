@@ -13,7 +13,7 @@ foreach ($diContainers as $name => $service){
     };
 }
 
-// routes
+// register routes
 foreach ($actions as $action => $conf){
     $route = $conf['route'];
     $method = $conf['method'];

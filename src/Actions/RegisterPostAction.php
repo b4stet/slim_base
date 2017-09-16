@@ -17,14 +17,14 @@ class RegisterPostAction extends AbstractAction{
 	    $userTable = new UserTable($this->service['db']);
 
 	    $isValid = $this->isValidUsernameAndPassword($username,$password,$userTable);
-	    if ($isValid[0] === true){
+	    if ($isValid['result'] === true){
 	            $user = new User();
 	            $user->setUsername($username);
 	            $user->setPassword($password);
 	            $userTable->save($user);
 	    }
 
-	    return $response = $this->service['view']->render($response, "register.html", $isValid[1]);
+	    return $response = $this->service['view']->render($response, "register.html", $isValid['msg']);
 	}
 
 	public function isValidUsernameAndPassword($username,$password,$userTable){
@@ -37,7 +37,7 @@ class RegisterPostAction extends AbstractAction{
             $res = false;
 		}
 
-		//user not already exists
+		//non-existing username
 		if ($userTable->isExistUsername($username)){
 	        $msg['msgUsernameError'] = "* User already exists";
 	        $res = false;
@@ -55,6 +55,6 @@ class RegisterPostAction extends AbstractAction{
 
 		}
 
-		return [$res,$msg];
+		return ['result'=>$res,'msg'=>$msg];
 	}
 }
