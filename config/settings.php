@@ -1,6 +1,13 @@
 <?php
 
-// app config
+// verbosity in logs and display
+// env: 'DEV'|'PROD'
+// log level: 'DEBUG'|'INFO'|'NOTICE'|'WARNING'|'ERROR'|'CRITICAL'|'ALERT'
+// if 'dev', detailed error diagnostic (stack trace) will appear in the error handler
+$env = 'PROD';
+$logLevel = 'DEBUG';
+
+// db config
 $dbSettings = [
     'dbname' => 'slim_base',
     'host'   => "mysql",
@@ -8,21 +15,30 @@ $dbSettings = [
     'pass'   => 'slim'	
 ];
 
+// paths
+$templatesPath = __DIR__.'/../templates/';
+$logFile       = __DIR__.'/../logs/app.log';
+
+
+
+/********************/
+// Slim app settings
 $appConfig = [
     'settings' => [
-        'displayErrorDetails'    => true, //for dev only, detailed error diagnostic (stack trace) will appear in th eerror handler
+        'displayErrorDetails'    => $env === 'DEV', 
         'addContentLengthHeader' => false,
-        'db'                     => $dbSettings
     ]
 ];
 
-
 //DI containers for services
+$logger = new SlimBase\ServiceProviders\DefaultLogger($logFile,$logLevel);
+
 $diContainers = [
-	'db'              => new SlimBase\ServiceProviders\DbConnector("mysql:host=" . $dbSettings['host'] . ";dbname=" . $dbSettings['dbname'],$dbSettings['user'], $dbSettings['pass']),
-	'view'            => new Slim\Views\PhpRenderer(__DIR__.'/../templates/'),
-	'errorHandler'    => new SlimBase\ServiceProviders\DefaultErrorHandler(),
-	'notFoundHandler' => new SlimBase\ServiceProviders\NotFoundErrorHandler()
+    'db'              => new SlimBase\ServiceProviders\DbConnector($dbSettings),
+	'view'            => new Slim\Views\PhpRenderer($templatesPath),
+    'logger'          => $logger,
+	'errorHandler'    => new SlimBase\ServiceProviders\DefaultErrorHandler($logger),
+	'notFoundHandler' => new SlimBase\ServiceProviders\NotFoundErrorHandler($logger)
 ];
 
 

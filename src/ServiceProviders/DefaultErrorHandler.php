@@ -7,8 +7,15 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Exception;
 
 class DefaultErrorHandler{
+	protected $logger;
+
+	public function __construct(DefaultLogger $logger){
+		$this->logger = $logger->getLogger();
+	}
+
 	public function __invoke(Request $request, Response $response, Exception $exception) {
-		//TODO: log error message
+		$this->logger->error("500 error occured.",["msg"=> $exception->getMessage()]);
+
     	return $response
         	->withStatus(500)
         	->withHeader('Content-Type', 'text/html')

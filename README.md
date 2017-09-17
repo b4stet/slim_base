@@ -17,10 +17,11 @@ The API, behind the web application, will handle:
 - [x] register and login with standard authentication scheme (password salted then hashed) and native PHP functions 
 - [x] add custom error handlers (500 and 404) 
 - [x] refacto - create proper config loading, service providers registration, routing and controllers
+- [x] add a logger
 - [] register and login: replace PHP functions by libsodium ones 
 - [] register and login: replace standard authentication by SRP 
-- [] implement a middleware for authentication 
 - [] add unit tests
+- [] use a middleware for authorization 
 - [] divide into web app and api
 - [] add and serve resources only if user is logged in
 - [] serve resources in an encrypted way using SRP key-exchange
@@ -43,13 +44,13 @@ docker-compose build && docker-compose up
 
 # Security consideration
 
-List of 'countermeasures' implemented to prevent basic vulnerabilities
-* Information leak by errors/warning verbosity: phpfpm config, disable debug, generic error messages and code status
+List of 'countermeasures' to implement to prevent basic abuses
+* Information leaks: disable display_errors in phpfpm config and Slim app settings, generic error messages and code status, no 'Server' and 'X-powered-by' headers
 * Unauthorized access: tbd
-* SQli: pdo with prepared statement, db not reached by web app but only by the internal api
+* SQli: pdo with prepared statement, db not reachable by web app but only through an api
 * Directory traversal, lfi, rfi: nginx config, parameter sanitization if any
-* XSS: parameter sanitization if any
 * Session takeover: tbd
+* Bruteforce account: limit on attempts number, tbc
 * ... tbc
 
 
