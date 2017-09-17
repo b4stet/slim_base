@@ -3,8 +3,8 @@
 // verbosity in logs and display
 // env: 'DEV'|'PROD'
 // log level: 'DEBUG'|'INFO'|'NOTICE'|'WARNING'|'ERROR'|'CRITICAL'|'ALERT'
-// if 'dev', detailed error diagnostic (stack trace) will appear in the error handler
-$env = 'PROD';
+// if 'DEV', detailed error diagnostic (stack trace) will appear in the error handler
+$env = 'DEV';
 $logLevel = 'DEBUG';
 
 // db config
@@ -31,14 +31,18 @@ $appConfig = [
 ];
 
 //DI containers for services
-$logger = new SlimBase\ServiceProviders\DefaultLogger($logFile,$logLevel);
-
 $diContainers = [
     'db'              => new SlimBase\ServiceProviders\DbConnector($dbSettings),
-	'view'            => new Slim\Views\PhpRenderer($templatesPath),
-    'logger'          => $logger,
-	'errorHandler'    => new SlimBase\ServiceProviders\DefaultErrorHandler($logger),
-	'notFoundHandler' => new SlimBase\ServiceProviders\NotFoundErrorHandler($logger)
+    'view'            => new Slim\Views\PhpRenderer($templatesPath),
 ];
+
+if ($env === 'PROD'){
+    $logger = new SlimBase\ServiceProviders\DefaultLogger($logFile,$logLevel);
+
+    $diContainers['logger']          = $logger;
+    $diContainers['errorHandler']    = new SlimBase\ServiceProviders\DefaultErrorHandler($logger);
+    $diContainers['notFoundHandler'] = new SlimBase\ServiceProviders\NotFoundErrorHandler($logger);
+    $diContainers['phpErrorHandler'] = new SlimBase\ServiceProviders\PhpErrorHandler($logger);
+}
 
 

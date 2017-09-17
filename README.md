@@ -44,7 +44,7 @@ docker-compose build && docker-compose up
 
 # Security consideration
 
-List of 'countermeasures' to implement to prevent basic abuses
+[todo] List of 'countermeasures' to implement to prevent basic abuses
 * Information leaks: disable display_errors in phpfpm config and Slim app settings, generic error messages and code status, no 'Server' and 'X-powered-by' headers
 * Unauthorized access: tbd
 * SQli: pdo with prepared statement, db not reachable by web app but only through an api

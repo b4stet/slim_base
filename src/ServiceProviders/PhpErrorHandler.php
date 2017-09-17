@@ -4,12 +4,13 @@ namespace SlimBase\ServiceProviders;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Exception;
+use Throwable;
 
-class DefaultErrorHandler extends AbstractErrorHandler{
-	public function __invoke(Request $request, Response $response, Exception $exception) {
+
+class PhpErrorHandler extends AbstractErrorHandler{
+	public function __invoke(Request $request, Response $response, Throwable $error) {
 		$this->logger->error(
-			"Error 500. ". $exception->getMessage() . " in" . $exception->getFile() . ":" . $exception->getLine(),
+			"Php runtime error. ". $error->getMessage() . " in " . $error->getFile() . ":" . $error->getLine(),
 			$this->getContext($request)
 			);
 
