@@ -8,7 +8,6 @@ Resources
 {% block content %}
 	<h1>List of available resources</h1>
 
-	{% if msgIsAuthorized %}
 		<ul>
 			<li> resource 1 </li>
 			<li> resource 2 </li>
@@ -16,8 +15,5 @@ Resources
 			<li> resource 4 </li>
 		</ul>
 
-	{% else %}
-		<div><font color="red">Unauthorized access. You must be logged in.</font></div>
-	{% endif %}
 {% endblock %}
 

@@ -1,36 +1,20 @@
 <?php
-session_start();
-
 require_once __DIR__.'/../vendor/autoload.php';
-require_once __DIR__.'/../config/settings.php';
-require_once __DIR__.'/../config/routing.php';
-use Slim\App;
+use SlimBase\MyApp;
 
+const ENV = 'DEV';
+const LOG_LEVEL = 'DEBUG';
 
-// instantiate app and register service providers
-$app = new App($appConfig);
-$container = $app->getContainer();
-foreach ($diContainers as $name => $service){
-    $container[$name] = function ($c) use ($service){
-        return $service;
-    };
-}
+$config = require __DIR__ . '/../config/config.php';
+$app = new MyApp($config);
 
-// register routes
-foreach ($actions as $action => $conf){
-    $route = $conf['route'];
-    $method = $conf['method'];
-    $function = $conf['function'];
-    $name = end(explode('\\',$action));
-    $services = [];
-    foreach ($conf['services'] as $service){
-        $services[$service] = $container->get($service);
-    }
-    $container[$name] = function ($c) use ($action,$services){
-        return new $action($services);
-    };
-    $app->map([$method],$route,$name.':'.$function);
+$services = require __DIR__ . '/../config/services.php';
+$app->registerServices($services);
+
+$actions =  require __DIR__ . '/../config/routing.php';
+foreach ($actions as $action){
+    $app->registerRoutes($action['routes'],$action['middlewares']);
 }
 
 // run application
-$app->run();        
+$app->run();
