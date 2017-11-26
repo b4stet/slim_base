@@ -9,9 +9,6 @@ class NotFoundErrorHandler extends AbstractErrorHandler{
 	public function __invoke(Request $request, Response $response) {
 		$this->logger->info('Error 404.',$this->getContext($request));
 
-    	return $response
-        	->withStatus(404)
-        	->withHeader('Content-Type', 'text/html')
-        	->write('Error 404 - Not found - <a href="/index.php">back to index</a>');
+		return $this->view->render($response->withStatus(404), 'error.html', ['errorCode'=>404]);
    	}	
 }

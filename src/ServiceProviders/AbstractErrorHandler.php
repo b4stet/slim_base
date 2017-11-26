@@ -4,13 +4,16 @@ namespace SlimBase\ServiceProviders;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Views\Twig;
 use Exception;
 
 class AbstractErrorHandler{
 	protected $logger;
+	protected $view;
 
-	public function __construct(DefaultLogger $logger){
+	public function __construct(DefaultLogger $logger, Twig $view){
 		$this->logger = $logger->getLogger();
+		$this->view   = $view;
 	}
 
 	public function getContext(Request $request){

@@ -28,17 +28,17 @@ return [
 				'function' => 'doGetLogin',
 				'services' => array('view')
 			],
-			'SlimBase\Actions\LogoutGetAction' => [
-				'route'  => '/logout',
-				'method' => 'GET',
-				'function' => 'doGetLogout',
-				'services' => array('view')
-			],
 			'SlimBase\Actions\LoginPostAction' => [
 				'route'  => '/login',
 				'method' => 'POST',
 				'function' => 'doPostlogin',
 				'services' => array('view','db')
+			],
+			'SlimBase\Actions\LogoutGetAction' => [
+				'route'  => '/logout',
+				'method' => 'GET',
+				'function' => 'doGetLogout',
+				'services' => array('view')
 			],
 		]
 	],

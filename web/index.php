@@ -2,7 +2,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 use SlimBase\MyApp;
 
-const ENV = 'DEV';
+const ENV = 'PROD';
 const LOG_LEVEL = 'DEBUG';
 
 $config = require __DIR__ . '/../config/config.php';

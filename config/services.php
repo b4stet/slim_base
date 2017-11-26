@@ -21,9 +21,9 @@ if (ENV === 'PROD'){
     $logger = new SlimBase\ServiceProviders\DefaultLogger($logFile,LOG_LEVEL);
 
     $diContainers['logger']          = $logger;
-    $diContainers['errorHandler']    = new SlimBase\ServiceProviders\DefaultErrorHandler($logger);
-    $diContainers['notFoundHandler'] = new SlimBase\ServiceProviders\NotFoundErrorHandler($logger);
-    $diContainers['phpErrorHandler'] = new SlimBase\ServiceProviders\PhpErrorHandler($logger);
+    $diContainers['errorHandler']    = new SlimBase\ServiceProviders\DefaultErrorHandler($logger,$twigview);
+    $diContainers['notFoundHandler'] = new SlimBase\ServiceProviders\NotFoundErrorHandler($logger,$twigview);
+    $diContainers['phpErrorHandler'] = new SlimBase\ServiceProviders\PhpErrorHandler($logger,$twigview);
 }
 
 return $diContainers;

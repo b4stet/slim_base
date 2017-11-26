@@ -14,9 +14,6 @@ class PhpErrorHandler extends AbstractErrorHandler{
 			$this->getContext($request)
 			);
 
-    	return $response
-        	->withStatus(500)
-        	->withHeader('Content-Type', 'text/html')
-        	->write('Error 500 - Something went wrong! - <a href="/index.php">back to index</a>');
-   		}
+		return $this->view->render($response->withStatus(500), 'error.html',['errorCode'=>500]);
+	}
 }

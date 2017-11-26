@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+error {{ errorCode }}
+{% endblock %}
+
+
+{% block content %}
+	<h1>Error {{ errorCode }}</h1>
+
+	{% if errorCode == 404 %}
+		Not found.
+
+	{% elseif errorCode == 403 %}
+		Forbidden.
+
+	{% else %}
+		Something went wrong.
+	{% endif %}	
+{% endblock %}

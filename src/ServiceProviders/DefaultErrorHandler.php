@@ -8,14 +8,14 @@ use Exception;
 
 class DefaultErrorHandler extends AbstractErrorHandler{
 	public function __invoke(Request $request, Response $response, Exception $exception) {
+		$errorCode = empty($exception->getCode()) ? 500 : $exception->getCode();
 		$this->logger->error(
-			"Error 500. ". $exception->getMessage() . " in" . $exception->getFile() . ":" . $exception->getLine(),
+			"Error ". $errorCode . " " . $exception->getMessage() . " in" . $exception->getFile() . ":" . $exception->getLine(),
 			$this->getContext($request)
-			);
+		);
 
-    	return $response
-        	->withStatus(500)
-        	->withHeader('Content-Type', 'text/html')
-        	->write('Error 500 - Something went wrong! - <a href="/index.php">back to index</a>');
-   		}
+		return $this->view->render($response->withStatus($errorCode), 'error.html', ['errorCode' => $errorCode]);
+
+
+	}
 }
