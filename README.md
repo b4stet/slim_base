@@ -19,8 +19,7 @@ The API, behind the web application, will handle:
 - [x] refacto - create proper config loading, service providers registration, routing and controllers
 - [x] add a logger
 - [x] session management: restrict access to resources, v1 with PHP session 
-- [] session management: restrict access to resources, v2 with a middleware 
-- [] use a middleware for authorization 
+- [x] session management: restrict access to resources, v2 with a middleware 
 - [] divide into web app and api
 - [] add resources
 - [] register and login: replace standard authentication by SRP 
