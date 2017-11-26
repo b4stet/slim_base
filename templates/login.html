@@ -1,22 +1,29 @@
-<h1> User Login </h1>
+{% extends "base.html" %}
 
-<?php if ($msgLoginSuccess):?>
-<div><font color="green"><?=$msgLoginSuccess?></font></div>
-<div><a href='/resources/list'>Go to resources list</a></div>
+{% block title %}
+	User Login
+{% endblock %}
 
-<?php else:?>
-<div><font color="red"><?=$msgLoginFailed?></font></div>
-<form method="post" action="">
-	<table>
-		<tr>
-			<td>Username</td>
-			<td><input type="text" name="username" value=""></td>
-		</tr>
-		<tr>
-			<td>Password</td>
-			<td><input type="password" name="password" value=""></td>
-		</tr>
-	</table>
-	<input id="button-login" type="submit" name="login" value="Submit">
-</form>
-<?php endif;?>
+{% block content %}
+	<h1> User Login </h1>
+
+	{% if session.isLoggedIn %}
+	<div><font color="green">You are now logged in. You can now browse resources.</font></div>
+
+	{% else %}
+	<div><font color="red">{{ msgLoginFailed }}</font></div>
+	<form method="post" action="">
+		<table>
+			<tr>
+				<td>Username</td>
+				<td><input type="text" name="username" value=""></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td><input type="password" name="password" value=""></td>
+			</tr>
+		</table>
+		<input id="button-login" type="submit" name="login" value="Submit">
+	</form>
+	{% endif %}
+{% endblock %}

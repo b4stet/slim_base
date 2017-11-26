@@ -18,13 +18,13 @@ The API, behind the web application, will handle:
 - [x] add custom error handlers (500 and 404) 
 - [x] refacto - create proper config loading, service providers registration, routing and controllers
 - [x] add a logger
-- [] register and login: replace PHP functions by libsodium ones 
-- [] register and login: replace standard authentication by SRP 
-- [] add unit tests
+- [] session management: restrict access to resources, v1 with PHP session 
+- [] session management: restrict access to resources, v2 with a middleware 
 - [] use a middleware for authorization 
 - [] divide into web app and api
-- [] add and serve resources only if user is logged in
-- [] serve resources in an encrypted way using SRP key-exchange
+- [] add resources
+- [] register and login: replace standard authentication by SRP 
+- [] serve encrypted resources, taking advantage of SRP key-exchange ?
 - [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
 
 
@@ -41,17 +41,6 @@ from root folder of the project:
 docker run -it --rm -v $(pwd):/app -u $(id -u $USER):$(id -g $USER) -w /app composer install
 docker-compose build && docker-compose up
 ```
-
-# Security consideration
-
-[todo] List of 'countermeasures' to implement to prevent basic abuses
-* Information leaks: disable display_errors in phpfpm config and Slim app settings, generic error messages and code status, no 'Server' and 'X-powered-by' headers
-* Unauthorized access: tbd
-* SQli: pdo with prepared statement, db not reachable by web app but only through an api
-* Directory traversal, lfi, rfi: nginx config, parameter sanitization if any
-* Session takeover: tbd
-* Bruteforce account: limit on attempts number, tbc
-* ... tbc
 
 
 # References

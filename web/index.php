@@ -1,8 +1,11 @@
 <?php
+session_start();
+
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../config/settings.php';
 require_once __DIR__.'/../config/routing.php';
 use Slim\App;
+
 
 // instantiate app and register service providers
 $app = new App($appConfig);

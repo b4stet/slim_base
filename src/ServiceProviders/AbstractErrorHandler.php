@@ -27,7 +27,7 @@ class AbstractErrorHandler{
 	}
 
 	public function filterLoggedBody($body){
-		if (!empty($body)){
+		if (isset($body['password'])){
 			//mask 'password'
 			$body['password'] = "xxx";
 		}

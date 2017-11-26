@@ -16,8 +16,8 @@ class LoginPostAction extends AbstractAction{
 
 	    $user = $userTable->getUserByUsernameAndPassword($data['username'],$data['password']);
 	    if (!empty($user)){
-	        $msg = "You are now logged in.";
-	        $response = $this->service['view']->render($response, "login.html", ['msgLoginSuccess'=>$msg]);
+	        $_SESSION['isLoggedIn'] = true;
+	        $response = $response->withRedirect("/login");
 	    }else{
 	        $msg = "Wrong username and/or password.";
 	        $response = $this->service['view']->render($response, "login.html", ['msgLoginFailed'=>$msg]);

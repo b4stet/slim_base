@@ -31,9 +31,12 @@ $appConfig = [
 ];
 
 //DI containers for services
+$twigview = new Slim\Views\Twig($templatesPath);
+$twigview->getEnvironment()->addGlobal("session", $_SESSION);
+
 $diContainers = [
     'db'              => new SlimBase\ServiceProviders\DbConnector($dbSettings),
-    'view'            => new Slim\Views\PhpRenderer($templatesPath),
+    'view'            => $twigview,
 ];
 
 if ($env === 'PROD'){
