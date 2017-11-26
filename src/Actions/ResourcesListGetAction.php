@@ -10,9 +10,9 @@ class ResourcesListGetAction extends AbstractAction{
 
 	public function doGetListResources(Request $request, Response $response){
 		if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] === true){
-			$response->getBody()->write("OK");
+			$response = $this->service['view']->render($response, "resourcesList.html", ['msgIsAuthorized'=> true]);
 		}else{
-			$response->getBody()->write("unauthorized");
+			$response = $this->service['view']->render($response, "resourcesList.html", ['msgIsAuthorized'=> false]);
 		}
 		return $response;
 	}

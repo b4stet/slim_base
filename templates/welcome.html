@@ -1,15 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}
-Welcome
+	Welcome to the Slim Base application
 {% endblock %}
 
 
 
 {% block content %}
-<h1>Welcome !</h1>
+	<h1>Welcome !</h1>
 
+	<div>
+		Toy project using PHP Slim framework and Docker to implement a small web application and an API.
 
+		<br>
+		The web application will provide to users:
+		<ul> 
+			<li> registration to get access to a member area, where several resources are available </li>
+			<li> zero-knowledge authentication (SRP) </li>
+			<li> session management </li>
+			<li> anonymous access to resources (DRAS) </li>
+			<li> optional encryption once authenticated </li>
+		</ul>
+
+		<br>
+		The API, behind the web application, will handle:
+		<ul> 
+			<li> user management (creation, authentication, authorization) </li>
+			<li> deliver resources when requested </li>
+		</ul>
+	</div>
 {% endblock %}
 
 

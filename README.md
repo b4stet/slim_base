@@ -3,13 +3,13 @@
 Toy project using PHP Slim framework and Docker to implement a small web application and an API.
 
 The web application will provide to users:
-* registration to get access to a member area
+* registration to get access to a member area, where several resources are available
 * zero-knowledge authentication (SRP)
-* anonymous access to resources if authorized (DRAS)
+* anonymous access to resources (DRAS)
 * optional encryption once authenticated
 
 The API, behind the web application, will handle:
-* user management (creation, authentication, authorizations)
+* user management (creation, authentication, authorization)
 * deliver resources when requested
 
 
@@ -18,7 +18,7 @@ The API, behind the web application, will handle:
 - [x] add custom error handlers (500 and 404) 
 - [x] refacto - create proper config loading, service providers registration, routing and controllers
 - [x] add a logger
-- [] session management: restrict access to resources, v1 with PHP session 
+- [x] session management: restrict access to resources, v1 with PHP session 
 - [] session management: restrict access to resources, v2 with a middleware 
 - [] use a middleware for authorization 
 - [] divide into web app and api
