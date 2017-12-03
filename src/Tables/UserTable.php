@@ -2,10 +2,9 @@
  
 namespace SlimBase\Tables;
 
-use SlimBase\Entities\User as User;
-use SlimBase\Utils\Randomness as Randomness;
-use SlimBase\Utils\Hashing as Hashing;
-use Exception;
+use SlimBase\Entities\User;
+use SlimBase\Utils\Randomness;
+use SlimBase\Utils\Hashing;
 
 class UserTable {
 

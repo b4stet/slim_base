@@ -33,19 +33,19 @@ class RegisterPostAction extends AbstractAction{
 
 		//username alphanumeric only
 		if (!(preg_match('/^[a-zA-Z0-9]+$/',$username) === 1)){
-            $msg['msgUsernameError'] = "* Username can only contain alphanumeric characters ([a-zA-Z0-9])";
+            $msg['msgUsernameError'] = "! Username can only contain alphanumeric characters ([a-zA-Z0-9])";
             $res = false;
 		}
 
 		//non-existing username
 		if ($userTable->isExistUsername($username)){
-	        $msg['msgUsernameError'] = "* User already exists";
+	        $msg['msgUsernameError'] = "! User already exists";
 	        $res = false;
 	    }
 
 		//password not empty
 		if (empty($password)){
-	        $msg['msgPasswordError'] = "* Password cannot be empty";
+	        $msg['msgPasswordError'] = "! Password cannot be empty";
 	        $res = false;
 		}
 

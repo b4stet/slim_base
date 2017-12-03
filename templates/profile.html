@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}
+User profile
+{% endblock %}
+
+
+{% block content %}
+	{% if isEditable %}
+		<h1>Your profile</h1>
+		<p>
+			Here you can choose wether your profile is public, private or restricted.<br>
+			Below the line is the view of what other users will see if authorized.
+			<ul>
+				<li> if public, all users can see  </li>
+				<li> if private, only you can see  </li>
+				<li> if restricted, you can select which users are allowed to see </li>
+			</ul>
+		</p>
+
+		<form class="pure-form pure-form-aligned" method="post" action="">
+			<fieldset>
+				<div class="pure-control-group">
+					<label>Your full name</label>
+					<input type="text" name="fullname" value="{{ fullname }}">
+					<select id="fullname_status" name="fullname_status">
+
+						{% if isFullnamePublic %}
+							<option value="public" selected>public</option>
+							<option value="private">private</option>
+
+						{% else %}
+							<option value="public">public</option>
+							<option value="private" selected>private</option>
+						{%endif %}
+					</select>
+				</div>
+
+				<div class="pure-control-group">
+					<label>Your github</label>
+					<input type="text" name="githublink" value="{{ githublink }}">
+					<select id="githublink_status" name="githublink_status">
+
+						{% if isGithublinkPublic %}
+							<option value="public" selected>public</option>
+							<option value="private">private</option>
+
+						{% else %}
+							<option value="public">public</option>
+							<option value="private" selected>private</option>
+						{%endif %}
+					</select>
+				</div>
+
+				<div class="pure-controls">
+					<input class="pure-button pure-button-primary" id="button_profile_save" type="submit" name="profile_save" value="Submit">			
+				</div>
+			</fieldset>
+		</form>
+
+		<hr>
+
+	{% endif %}
+
+		<h1> Profile of  {{ username }}</h2>
+		<p>
+			<ul>
+				{% if isFullnamePublic %}
+					<li> Full name: {{ fullname }}</li>
+				{% endif %}
+
+				{% if isGithubPublic %}
+					<li> Github: {{ githublink }}</li>
+				{% endif %}		
+			</ul>
+		</p>
+
+{% endblock %}

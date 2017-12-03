@@ -7,16 +7,20 @@
         {% endblock %}
     </head>
     <body>
-        <div id="header">
+        <div id="header" class="pure-menu pure-menu-horizontal">
             {% block header %}
-                <ul>
-                    <li><a href='/'>Back to Index</a></li>
-                    <li><a href='/resources/list'>Go to resources list</a></li>
+                <ul class="pure-menu-list">
+                    <li  class="pure-menu-item"><a class="pure-menu-link" href='/'>Back to Index</a></li>
+                    <li  class="pure-menu-item"><a class="pure-menu-link" href='/resources/list'>Go to resources list</a></li>
+                    
                     {% if session.isLoggedIn %}
-                        <li><a href='/logout'>Log out</a></li>
+                        <li  class="pure-menu-item"><a class="pure-menu-link" href='/profile/{{session.userId}}'>Go to my profile</a></li>
+                        <li  class="pure-menu-item"><a class="pure-menu-link" href='/logout'>Log out</a></li>
+                    
                     {% else %}
-                        <li><a href='/register'>Go sign up</a></li>
-                        <li><a href='/login'>Go log in</a></li>
+                        <li  class="pure-menu-item"><a class="pure-menu-link" href='/register'>Go sign up</a></li>
+                        <li  class="pure-menu-item"><a class="pure-menu-link" href='/login'>Go log in</a></li>
+                    
                     {% endif %}
                 </ul>
             {% endblock %}

@@ -9,7 +9,7 @@ The web application will provide to users:
 * optional encryption once authenticated
 
 The API, behind the web application, will handle:
-* user management (creation, authentication, authorization)
+* user management (creation, update, authentication, authorization)
 * deliver resources when requested
 
 
@@ -20,6 +20,7 @@ The API, behind the web application, will handle:
 - [x] add a logger
 - [x] session management: restrict access to resources, v1 with PHP session 
 - [x] session management: restrict access to resources, v2 with a middleware 
+- [] add a profile page
 - [] divide into web app and api
 - [] add resources
 - [] register and login: replace standard authentication by SRP 

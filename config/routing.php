@@ -54,6 +54,18 @@ return [
 				'function' => 'doGetListResources',
 				'services' => array('view')
 			],
+			'SlimBase\Actions\ProfileGetAction' => [
+				'route'  => '/profile/{userId}',
+				'method' => 'GET',
+				'function' => 'doGetProfile',
+				'services' => array('view','db')
+			],
+			'SlimBase\Actions\ProfilePostAction' => [
+				'route'  => '/profile/{userId}',
+				'method' => 'POST',
+				'function' => 'doPostProfile',
+				'services' => array('view','db')
+			],
 		]
 	]
 ];

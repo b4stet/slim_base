@@ -17,6 +17,9 @@ class LoginPostAction extends AbstractAction{
 	    $user = $userTable->getUserByUsernameAndPassword($data['username'],$data['password']);
 	    if (!empty($user)){
 	        $_SESSION['isLoggedIn'] = true;
+	        $_SESSION['userId'] = $user->getUserId();
+	        $_SESSION['username'] = $user->getUsername();
+
 	        $response = $response->withRedirect("/login");
 	    }else{
 	        $msg = "Wrong username and/or password.";
