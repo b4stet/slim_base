@@ -2,18 +2,20 @@
  
 namespace SlimBase\Entities;
 
+use SlimBase\Entities\FieldProfile;
+
 class UserProfile {
 
-	const PROFILE_STATUS_PUBLIC = 'public';
-	const PROFILE_STATUS_PRIVATE = 'private';
-
 	protected $userId;
-	protected $fullname;
-	protected $fullnameStatus;
-	protected $githublink;
-	protected $githublinkStatus;
+	protected $fields;
+
+	// protected $fullname;
+	// protected $fullnameStatus;
+	// protected $githublink;
+	// protected $githublinkStatus;
 
 	public function __construct(){
+		$this->fields = [];
 	}
 
 	public function getUserId(){
@@ -24,35 +26,27 @@ class UserProfile {
 		$this->userId = $id; 
 	}
 
-	public function getFullname(){
-		return $this->fullname;
+	public function getFields(){
+		return $this->fields;
 	}
 
-	public function setFullname($fullname){
-		$this->fullname = $fullname; 
+
+	public function getField($fieldName){
+		return $this->fields[$fieldName];
 	}
 
-	public function getFullnameStatus(){
-		return $this->fullnameStatus;
+	public function setField($name,$value,$status){
+		$this->fields[$name] = new FieldProfile($name,$value,$status);
 	}
 
-	public function setFullnameStatus($fullnameStatus){
-		$this->fullnameStatus = $fullnameStatus; 
-	}
+	static public function fromData($userId, $data = array()){
+		$profile = new UserProfile();
+		$profile->setUserId($userId);
 
-	public function getGithublink(){
-		return $this->githublink;
-	}
+		foreach ($data as $field){
+			$profile->setField($field['field_name'],$field['field_value'],$field['field_status']);
+		}
 
-	public function setGithublink($githublink){
-		$this->githublink = $githublink; 
-	}
-
-	public function getGithublinkStatus(){
-		return $this->githublinkStatus;
-	}
-
-	public function setGithublinkStatus($githublinkStatus){
-		$this->githublinkStatus = $githublinkStatus; 
+		return $profile;
 	}
 }

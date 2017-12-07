@@ -2,7 +2,7 @@
  
 namespace SlimBase\Entities;
 
-class User {
+class UserAccount {
 
 	protected $userId;
 	protected $username;

@@ -4,8 +4,8 @@ namespace SlimBase\Actions;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use SlimBase\Tables\UserTable;
-use SlimBase\Entities\User;
+use SlimBase\Tables\UserAccountTable;
+use SlimBase\Entities\UserAccount;
 
 
 class RegisterPostAction extends AbstractAction{
@@ -14,20 +14,20 @@ class RegisterPostAction extends AbstractAction{
 	    $data = $request->getParsedBody();
 	    $username = $data['username'];
 	    $password = $data['password'];
-	    $userTable = new UserTable($this->service['db']);
+	    $userAccountTable = new UserAccountTable($this->service['db']);
 
-	    $isValid = $this->isValidUsernameAndPassword($username,$password,$userTable);
+	    $isValid = $this->isValidUsernameAndPassword($username,$password,$userAccountTable);
 	    if ($isValid['result'] === true){
-	            $user = new User();
+	            $user = new UserAccount();
 	            $user->setUsername($username);
 	            $user->setPassword($password);
-	            $userTable->save($user);
+	            $userAccountTable->save($user);
 	    }
 
 	    return $response = $this->service['view']->render($response, "register.html", $isValid['msg']);
 	}
 
-	public function isValidUsernameAndPassword($username,$password,$userTable){
+	public function isValidUsernameAndPassword($username,$password,$userAccountTable){
 		$msg = [];
 		$res = true;
 
@@ -38,7 +38,7 @@ class RegisterPostAction extends AbstractAction{
 		}
 
 		//non-existing username
-		if ($userTable->isExistUsername($username)){
+		if ($userAccountTable->isExistUsername($username)){
 	        $msg['msgUsernameError'] = "! User already exists";
 	        $res = false;
 	    }

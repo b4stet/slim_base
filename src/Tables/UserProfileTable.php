@@ -12,61 +12,52 @@ class UserProfileTable {
 		$this->db = $db;
 	}
 
-//:fullname,:githublink,:fullname_status,:githublink_status
 	public function save(UserProfile $profile){
-		$params = [
-			':user_id' 				=> $profile->getUserId(),
-			':fullname' 			=> $profile->getFullname(),
-			':fullname_status'		=> $profile->getFullnameStatus(),
-			':githublink'			=> $profile->getGithublink(),
-			':githublink_status' 	=> $profile->getGithublinkStatus()
-		];
+		$res = [];
+		foreach ($profile->getFields() as $field) {
+			$existStmt = $this->db->prepare('SELECT 1 FROM user_profiles WHERE user_id=:userId AND field_name=:fieldName LIMIT 1');
+			$existStmt->execute([
+				':userId'		=> $profile->getUserId(),
+				':fieldName'	=> $field->getName(),
+			]);
+			$isFieldExist = $existStmt->fetch();
 
-		if ($this->isExistUserId($profile->getUserId())){
-			$stmt = $this->db->prepare('
-				UPDATE user_profiles 
-				SET fullname=:fullname, githublink=:githublink, fullname_status=:fullname_status, githublink_status=:githublink_status
-				WHERE users_user_id=:user_id
-				'
-			);
-		}else{
-			$stmt = $this->db->prepare('
-				INSERT INTO user_profiles
-				(users_user_id,fullname,githublink,fullname_status,githublink_status)
-				VALUES (:user_id,:fullname,:githublink,:fullname_status,:githublink_status)
-				'
-			);
+			if ($isFieldExist !== false){
+				$stmt = $this->db->prepare('
+					UPDATE user_profiles
+					SET 
+						field_value=:fieldValue,
+						field_status=:fieldStatus
+					WHERE user_id=:userId AND field_name=:fieldName
+					'
+				);
+			}else{
+				$stmt = $this->db->prepare('
+					INSERT INTO user_profiles (user_id,field_name,field_value,field_status) 
+					VALUES (:userId,:fieldName,:fieldValue,:fieldStatus)
+					'
+				);
+			}
+			$params = [
+				':userId'		=> $profile->getUserId(),
+				':fieldName'	=> $field->getName(),
+				':fieldValue'	=> $field->getValue(),
+				':fieldStatus'	=> $field->getStatus(),
+			];
+			$res[$field->getName()] = $stmt->execute($params);
 		}
 
-		return $stmt->execute($params); 
-	}
-
-	public function isExistUserId($userId){
-		$stmt = $this->db->prepare('SELECT * FROM user_profiles WHERE users_user_id=:userId LIMIT 1');
-		$stmt->execute([":userId"=>$userId]);
-		$res = $stmt->fetch();
-
-		$isExist = false;		
-		if ($res !== false){
-			$isExist = true;
-		}
-		return $isExist;
+		return $res; 
 	}
 
 	public function getProfileByUserId($userId){
-		$stmt = $this->db->prepare('SELECT * FROM user_profiles WHERE users_user_id=:userId LIMIT 1');
+		$stmt = $this->db->prepare('SELECT * FROM user_profiles WHERE user_id=:userId');
 		$stmt->execute([":userId"=>$userId]);
-		$res = $stmt->fetch();
+		$res = $stmt->fetchAll();
 
 		$profile = null;
 		if ($res !== false){
-			$profile = new UserProfile();
-			$profile->setUserId($res['users_user_id']);
-			$profile->setFullname($res['fullname']);
-			$profile->setFullnameStatus($res['fullname_status']);
-			$profile->setGithublink($res['githublink']);
-			$profile->setGithublinkStatus($res['githublink_status']);
-
+			$profile = UserProfile::fromData($userId, $res);
 		}
 		return $profile;
 	}

@@ -4,21 +4,20 @@ namespace SlimBase\Actions;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use SlimBase\Tables\UserTable;
-use SlimBase\Entities\User;
+use SlimBase\Tables\UserAccountTable;
+//use SlimBase\Entities\UserAccount;
 
 
 class LoginPostAction extends AbstractAction{
 
 	public function doPostLogin(Request $request, Response $response){
 	    $data = $request->getParsedBody();
-	    $userTable = new UserTable($this->service['db']);
+	    $userAccountTable = new UserAccountTable($this->service['db']);
 
-	    $user = $userTable->getUserByUsernameAndPassword($data['username'],$data['password']);
+	    $user = $userAccountTable->getUserByUsernameAndPassword($data['username'],$data['password']);
 	    if (!empty($user)){
 	        $_SESSION['isLoggedIn'] = true;
 	        $_SESSION['userId'] = $user->getUserId();
-	        $_SESSION['username'] = $user->getUsername();
 
 	        $response = $response->withRedirect("/login");
 	    }else{

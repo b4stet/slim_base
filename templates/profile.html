@@ -6,73 +6,58 @@ User profile
 
 
 {% block content %}
+{% set public = constant('SlimBase\\Entities\\FieldProfile::FIELD_STATUS_PUBLIC') %}
+{% set private = constant('SlimBase\\Entities\\FieldProfile::FIELD_STATUS_PRIVATE') %}
+{% set labels = constant('SlimBase\\Entities\\FieldProfile::FIELD_LABELS')%}
+{% set isDisabled = isEditable ? '' : 'disabled' %}
+{% set fields = profile.fields %}
+
+	<h1>Profile of {{ user.Username }}</h1>
+	
 	{% if isEditable %}
-		<h1>Your profile</h1>
-		<p>
-			Here you can choose wether your profile is public, private or restricted.<br>
-			Below the line is the view of what other users will see if authorized.
-			<ul>
-				<li> if public, all users can see  </li>
-				<li> if private, only you can see  </li>
-				<li> if restricted, you can select which users are allowed to see </li>
-			</ul>
-		</p>
+	<p>
+		Here you can choose wether your profile is public, private or restricted.<br>
+		<ul>
+			<li> if public, all users can see  </li>
+			<li> if private, only you can see  </li>
+			<li> if restricted, you can select which users are allowed to see </li>
+		</ul>
+	</p>
+	{% endif %}
 
-		<form class="pure-form pure-form-aligned" method="post" action="">
-			<fieldset>
-				<div class="pure-control-group">
-					<label>Your full name</label>
-					<input type="text" name="fullname" value="{{ fullname }}">
-					<select id="fullname_status" name="fullname_status">
-
-						{% if isFullnamePublic %}
-							<option value="public" selected>public</option>
-							<option value="private">private</option>
-
-						{% else %}
-							<option value="public">public</option>
-							<option value="private" selected>private</option>
-						{%endif %}
-					</select>
-				</div>
+	<form class="pure-form pure-form-aligned" method="post" action="">
+		<fieldset>
+			{% for key,label in labels %}
+				{% if fields[key].status == public%}
+					{% set pubSelected = 'selected'%}
+					{% set privSelected = ''%}
+				{% else %}
+					{% set pubSelected = ''%}
+					{% set privSelected = 'selected'%}
+				{% endif %}
 
 				<div class="pure-control-group">
-					<label>Your github</label>
-					<input type="text" name="githublink" value="{{ githublink }}">
-					<select id="githublink_status" name="githublink_status">
+					<label>{{ label }}</label>
 
-						{% if isGithublinkPublic %}
-							<option value="public" selected>public</option>
-							<option value="private">private</option>
-
-						{% else %}
-							<option value="public">public</option>
-							<option value="private" selected>private</option>
-						{%endif %}
-					</select>
+					{% if isEditable %}
+						<input type="text" name="{{ key }}" value="{{ fields[key].value }}">
+						<select id="{{key ~ '_status'}}" name="{{key ~ '_status'}}">
+							<option value="{{public}}" {{ pubSelected }}>{{public}}</option>
+							<option value="{{private}}" {{ privSelected }}>{{private}}</option>
+						</select>
+					{% else %}
+						{% if fields[key].status == public %}
+							<span> {{ fields[key].value }}</span>
+						{% endif %}
+					{% endif %}
 				</div>
+			{% endfor %}
 
+			{% if isEditable %}
 				<div class="pure-controls">
 					<input class="pure-button pure-button-primary" id="button_profile_save" type="submit" name="profile_save" value="Submit">			
 				</div>
-			</fieldset>
-		</form>
-
-		<hr>
-
-	{% endif %}
-
-		<h1> Profile of  {{ username }}</h2>
-		<p>
-			<ul>
-				{% if isFullnamePublic %}
-					<li> Full name: {{ fullname }}</li>
-				{% endif %}
-
-				{% if isGithubPublic %}
-					<li> Github: {{ githublink }}</li>
-				{% endif %}		
-			</ul>
-		</p>
-
+			{% endif %}
+		</fieldset>
+	</form>
 {% endblock %}

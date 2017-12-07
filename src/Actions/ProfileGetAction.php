@@ -5,7 +5,8 @@ namespace SlimBase\Actions;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use SlimBase\Tables\UserProfileTable;
-use SlimBase\Entities\UserProfile;
+use SlimBase\Tables\UserAccountTable;
+//use SlimBase\Entities\UserProfile;
 use Exception;
 
 class ProfileGetAction extends AbstractAction{
@@ -15,35 +16,17 @@ class ProfileGetAction extends AbstractAction{
 		if (!isset($_SESSION['userId'])){
 			throw new Exception('No key userId found in $_SESSION',500);
 		}
-		if (!isset($_SESSION['username'])){
-			throw new Exception('No key username found in $_SESSION',500);
-		}
 		
-		//if requested userId == current userId, then editable, else viewable only
+		//get requested profile data and username
 		$requestedUserId = $request->getAttribute('userId');
-		$currentUserId = $_SESSION['userId'];
-		$isEditable = ($requestedUserId === $currentUserId) ? true : false;
-
-		//get profile data
 		$profileTable = new UserProfileTable($this->service["db"]);
-		$profile = $profileTable->getProfileByUserId($_SESSION['userId']);
+		$accountTable = new UserAccountTable($this->service['db']);
 
-		$responseData = [];
-		$responseData["isEditable"] = $isEditable;
-		$responseData["username"] = $_SESSION['username'];
-
-
-		if (!empty($profile)){
-			$responseData["fullname"]	 			= $profile->getFullname();
-			$responseData["githublink"]				= $profile->getGithublink();
-			$responseData["isFullnamePublic"] 		= $profile->getFullnameStatus() == UserProfile::PROFILE_STATUS_PUBLIC ? true : false;
-			$responseData["isGithublinkPublic"]		= $profile->getGithublinkStatus() == UserProfile::PROFILE_STATUS_PUBLIC ? true : false;
-		}else{
-			$responseData["fullname"]	 			= '';
-			$responseData["githublink"]				= '';
-			$responseData["isFullnamePublic"] 		= false;
-			$responseData["isGithublinkPublic"]		= false;
-		}
+		$responseData = [
+			"isEditable"=> $requestedUserId === $_SESSION['userId'],
+			"profile"	=> $profileTable->getProfileByUserId($requestedUserId),
+			"user"		=> $accountTable->getUserByUserId($requestedUserId)
+		];
 
 		return $this->service['view']->render($response, 'profile.html', $responseData);
 	}
