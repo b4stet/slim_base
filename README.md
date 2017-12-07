@@ -18,12 +18,13 @@ The API, behind the web application, will handle:
 - [x] add custom error handlers (500 and 404) 
 - [x] refacto - create proper config loading, service providers registration, routing and controllers
 - [x] add a logger
-- [x] session management: restrict access to resources, v1 with PHP session 
-- [x] session management: restrict access to resources, v2 with a middleware 
-- [] add a profile page
+- [x] authorization: restrict access to resources, with a middleware 
+- [x] add a profile page: only account owner can edit
+- [] add a middleware to sanitize all user inputs at once
 - [] divide into web app and api
+- [] limit session lifetime
 - [] add resources
-- [] register and login: replace standard authentication by SRP 
+- [] register and login: replace standard authentication by SRP (and try to use libsodium)
 - [] serve encrypted resources, taking advantage of SRP key-exchange ?
 - [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
 
