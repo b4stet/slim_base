@@ -20,12 +20,11 @@ The API, behind the web application, will handle:
 - [x] add a logger
 - [x] authorization: restrict access to resources, with a middleware 
 - [x] add a profile page: only account owner can edit
-- [] add a middleware to sanitize all user inputs at once
+- [] centralize user inputs sanitization
 - [] divide into web app and api
 - [] limit session lifetime
 - [] add resources
 - [] register and login: replace standard authentication by SRP (and try to use libsodium)
-- [] serve encrypted resources, taking advantage of SRP key-exchange ?
 - [] add anonymity when serving resources, using DRAS scheme (cc Pascal :metal:)
 
 
@@ -43,10 +42,11 @@ docker run -it --rm -v $(pwd):/app -u $(id -u $USER):$(id -g $USER) -w /app comp
 docker-compose build && docker-compose up
 ```
 
+The application is then available on your localhost, port 8080.
+
 
 # References
 * [Slim](https://www.slimframework.com/) a PHP micro-framework
-* [libsodium](https://github.com/jedisct1/libsodium) library for cryptographic needs (randomness, encryption, hashing) 
 * [SRP6a](http://srp.stanford.edu/) a Zero-knowledge Authentication scheme (Tom Wu, Stanford)
 * [DRAS/IRAS](http://sancy.univ-bpclermont.fr/~lafourcade/SLIDES/Secrypt-BBL16.pdf) Two Secure Anonymous Proxy-based Data Storages (Pascal Lafourcade, Olivier Blazy and Xavier Bultel)
 
